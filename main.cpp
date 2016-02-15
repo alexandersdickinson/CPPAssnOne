@@ -9,12 +9,13 @@
 */
 
 #include <iostream>
+#include <iomanip>
 using std::cout;
 using std::cin;
 using std::string;
 
-//This function takes a string and makes sure it only contains digits.
-string stringDigitValidator(string desiredChars, string inputMsg, string failMsg);
+//This function takes a string and makes sure it contains only desired characters.
+string stringValidator(string desiredChars, string inputMsg);
 
 int main(int argc, const char * argv[]) {
     string id;
@@ -30,34 +31,37 @@ int main(int argc, const char * argv[]) {
     cout << "Long Beach City College\n\n";
     cout << "===============================================================\n";
     
-    id = stringDigitValidator("0123456789", "Please enter your ID:\n", "This is not an ID. Please try again:\n");
-    hours = stringDigitValidator("0123456789", "Please enter your hours worked this week:\n", "These are not hours. Please try again:\n");
-    wage = stringDigitValidator(".0123456789", "Please enter your hourly wages:\n", "This is not a wage. Please try again:\n");
+    id = stringValidator("0123456789", "ID");
+    hours = stringValidator("0123456789", "total hours worked this week");
+    wage = stringValidator(".0123456789", "hourly wages");
     
     hoursMath = stof(hours);
     wageMath = stof(wage);
     grossWage = wageMath * hoursMath;
     
-    cout << "ID: " << id[1] << "\n";
+    cout << "ID: " << id << std::endl;
     cout << "Hours this Week: " << hours << "\n";
-    cout << "Gross Wages this Week: $" << grossWage << "\n";
+    cout << "Hourly Wage: $" << wage << std::endl;
+    cout << "Gross Wages this Week: $" << std::setprecision(2) << std::fixed << grossWage << std::endl;
     return 0;
 }
 
 /*
- This function takes a string and makes sure it only contains digits. DesiredChars is a string representing
- a set of desired characters, which is passed to find_first_not_of.
+ This function takes a string and makes sure it only contains characters in desiredChars. InputMsg is what
+ the user is being asked to input (ex. user ID).
  Postcondition: Input is returned if all characters are digits. The user is repeatedly asked for input if any
  non-digit characters are found.
  */
-string stringDigitValidator(string desiredChars, string inputMsg, string failMsg){
+string stringValidator(string desiredChars, string inputMsg){
     string input;
     
     while (true) { //input validation loop
-        cout << inputMsg;//Tells the user that they need to input a certain value.
-        getline(cin, input);
+        //Tells the user that they need to input a certain value.
+        cout << "Please enter your " << inputMsg << ":\n";
+        getline(cin >> std::ws, input);
         if (input.find_first_not_of(desiredChars) != string::npos) {
-            cout << failMsg;//Tells the user that input has failed and that they must try again.
+            //Tells the user that input has failed and that they must try again.
+            cout << "The entered " << inputMsg << " is invalid\n";
             continue;
         }
         else{
